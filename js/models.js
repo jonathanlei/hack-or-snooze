@@ -80,7 +80,7 @@ class StoryList {
     } )
     let {title, author, url, username, storyId, createdAt}= storyResponse.data.story;
     let newStory= new Story({title, author, url, username, storyId, createdAt});
-    this.stories.push(newStory);
+    this.stories.unshift(newStory);
     return newStory;
   }
 }

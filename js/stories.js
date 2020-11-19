@@ -48,3 +48,25 @@ function putStoriesOnPage() {
 
   $allStoriesList.show();
 }
+
+/** helper function to gather form input */
+function gatherCreateStoryFormData(){
+  return {
+    author: $('#s-author').val(),
+    title: $('#s-title').val(),
+    url: $('#s-url').val()
+  } 
+ }
+
+/** gather from data, add to the story list and update DOM*/
+
+ async function addNewStoryFromForm(evt){
+   evt.preventDefault();
+   let formData = gatherCreateStoryFormData();
+    await storyList.addStory(currentUser, formData);
+    $createStoryForm.hide();
+    putStoriesOnPage();
+ }
+
+ $createStoryForm.on("submit", addNewStoryFromForm);
+ 
