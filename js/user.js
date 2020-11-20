@@ -108,9 +108,10 @@ function saveUserCredentialsInLocalStorage() {
  */
 
 function updateUIOnUserLogin() {
-  $body.off("click", ".star", currentUser.addOrRemoveFavStory);
+  if (currentUser){$body.off("click", ".star", currentUser.addOrRemoveFavStory)};
   console.debug("updateUIOnUserLogin");
   $allStoriesList.show();
+  console.log("UI")
   // show fav stars 
   $(".star").show();
 

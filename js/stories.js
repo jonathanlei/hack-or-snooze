@@ -56,7 +56,7 @@ function checkIfFavorited(){
 
 function putStoriesOnPage() {
   console.debug("putStoriesOnPage");
-  $body.off("click", ".star", currentUser.addOrRemoveFavStory);
+  if (currentUser){$body.off("click", ".star", currentUser.addOrRemoveFavStory)};
 
   $allStoriesList.empty();
 
@@ -67,7 +67,6 @@ function putStoriesOnPage() {
   }
 
   checkIfFavorited();
-  
   if (currentUser) {
     $(".star").show();
   };
@@ -80,7 +79,7 @@ function putFavStoriesOnPage() {
   $body.off("click", ".star", currentUser.addOrRemoveFavStory);
 
   console.debug("putFavStoriesOnPage");
-
+  hidePageComponents();
   $favoriteStoriesList.empty();
   if (currentUser.favorites.length === 0){
     $favoriteStoriesList.append("<h4>No favorites added!</h4>");
@@ -91,7 +90,7 @@ function putFavStoriesOnPage() {
     $favoriteStoriesList.append($story);
   }
 
-  $allStoriesList.hide();
+  
  
 
   let favoriteStoriesStars = $("#favorite-stories-list .star i");
