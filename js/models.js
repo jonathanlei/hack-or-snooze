@@ -23,7 +23,7 @@ class Story {
 
   getHostName() {
     // UNIMPLEMENTED: complete this function!
-    let urlObj= new URL(this.url);
+    let urlObj = new URL(this.url);
     return urlObj.hostname;
   }
 }
@@ -74,12 +74,12 @@ class StoryList {
 
   async addStory(user, storyObj) {
     // UNIMPLEMENTED: complete this function!
-    let storyResponse= await axios.post(`${BASE_URL}/stories`, {
+    let storyResponse = await axios.post(`${BASE_URL}/stories`, {
       token: user.loginToken,
       story: storyObj
-    } )
-    let {title, author, url, username, storyId, createdAt}= storyResponse.data.story;
-    let newStory= new Story({title, author, url, username, storyId, createdAt});
+    })
+    let { title, author, url, username, storyId, createdAt } = storyResponse.data.story;
+    let newStory = new Story({ title, author, url, username, storyId, createdAt });
     this.stories.unshift(newStory);
     return newStory;
   }
@@ -97,13 +97,13 @@ class User {
    */
 
   constructor({
-                username,
-                name,
-                createdAt,
-                favorites = [],
-                ownStories = []
-              },
-              token) {
+    username,
+    name,
+    createdAt,
+    favorites = [],
+    ownStories = []
+  },
+    token) {
     this.username = username;
     this.name = name;
     this.createdAt = createdAt;
@@ -166,4 +166,37 @@ class User {
       return null;
     }
   }
+  /* adding the story  object to the favorite array */
+  addingFavoriteStory = evt=> {
+    let storyId=$(evt.target).closest("li").attr("id");
+    // get story object from storyList 
+    let favStory= storyList.stories.filter(s=> s.storyId===storyId);
+    this.favorites.push(favStory[0]);
+  }
+  /* remove the story object from the favorite array */
+  removeFavoriteStory= evt =>{
+    let storyId=$(evt.target).closest("li").attr("id");
+    let favStoryIdx= storyList.stories.forEach(function(story,index){
+      if (story.storyId===storyId){
+        return index;
+      }
+    });
+    this.favorites.splice(favStoryIdx,1);
+  }
+
+ /* decide to add or remove a favarite story and change star color*/
+  addOrRemoveFavStory= evt=>{
+    let starIcon= evt.target;
+    if (starIcon.classList.contains("far")){
+      this.addingFavoriteStory(evt);
+      starIcon.classList.toggle("far", false)
+      starIcon.classList.add("fas");
+    }
+    else {
+      this.removeFavoriteStory(evt);
+      starIcon.classList.toggle("fas", false)
+      starIcon.classList.add("far");
+    }
+  }
+
 }

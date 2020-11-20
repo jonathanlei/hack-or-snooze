@@ -4,6 +4,8 @@ const $body = $("body");
 
 const $storiesLoadingMsg = $("#stories-loading-msg");
 const $allStoriesList = $("#all-stories-list");
+const $favoriteStoriesList = $("#favorite-stories-list");
+const $myStoriesList = $("#my-stories-list");
 
 const $loginForm = $("#login-form");
 const $signupForm = $("#signup-form");
@@ -13,6 +15,9 @@ const $navLogin = $("#nav-login");
 const $navUserProfile = $("#nav-user-profile");
 const $navLogOut = $("#nav-logout");
 const $navSubmit = $("#nav-submit");
+const $navFavorite= $('#nav-favorites')
+const $mainNavLinks=$("#main-nav-links");
+
 
 
 /** To make it easier for individual components to show just themselves, this
@@ -23,8 +28,10 @@ const $navSubmit = $("#nav-submit");
 function hidePageComponents() {
   const components = [
     $allStoriesList,
+    $createStoryForm,
     $loginForm,
     $signupForm,
+    $favoriteStoriesList
   ];
   components.forEach(c => c.hide());
 }
@@ -39,7 +46,7 @@ async function start() {
   await getAndShowStoriesOnStart();
 
   // if we got a logged-in user
-  if (currentUser) updateUIOnUserLogin();
+  if (currentUser) {updateUIOnUserLogin(), $(".star").show()};
 }
 
 // Once the DOM is entirely loaded, begin the app

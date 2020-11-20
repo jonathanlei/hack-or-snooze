@@ -18,6 +18,7 @@ async function login(evt) {
   // User.login retrieves user info from API and returns User instance
   // which we'll make the globally-available, logged-in user.
   currentUser = await User.login(username, password);
+  
 
   $loginForm.trigger("reset");
 
@@ -58,6 +59,7 @@ function logout(evt) {
   console.debug("logout", evt);
   localStorage.clear();
   location.reload();
+  $(start);
 }
 
 $navLogOut.on("click", logout);
@@ -107,8 +109,9 @@ function saveUserCredentialsInLocalStorage() {
 
 function updateUIOnUserLogin() {
   console.debug("updateUIOnUserLogin");
-
   $allStoriesList.show();
-
+  // show fav stars 
+  $(".star").show();
+  $(".star").on("click",currentUser.addOrRemoveFavStory);
   updateNavOnLogin();
 }

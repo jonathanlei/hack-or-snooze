@@ -23,6 +23,7 @@ function generateStoryMarkup(story) {
   const hostName = story.getHostName();
   return $(`
       <li id="${story.storyId}">
+       <span class="star hidden"> <i class="fa-star far"> </i> </span>
         <a href="${story.url}" target="a_blank" class="story-link">
           ${story.title}
         </a>
@@ -31,6 +32,7 @@ function generateStoryMarkup(story) {
         <small class="story-user">posted by ${story.username}</small>
       </li>
     `);
+
 }
 
 /** Gets list of stories from server, generates their HTML, and puts on page. */
@@ -45,28 +47,47 @@ function putStoriesOnPage() {
     const $story = generateStoryMarkup(story);
     $allStoriesList.append($story);
   }
+  if (currentUser) {$(".star").show()};
 
   $allStoriesList.show();
 }
 
+/* get a list of stories according to favarite list from Server, generates their HTML, and puts on page.*/
+function putFavStoriesOnPage() {
+  console.debug("putFavStoriesOnPage");
+
+  if (currentUser.favorites.length!==0){
+    $favoriteStoriesList.empty();
+  }
+  // loop through all of the favorites and generate HTML for them
+  for (let story of currentUser.favorites) {
+    const $story = generateStoryMarkup(story);
+    $favoriteStoriesList.append($story);
+  }
+  $allStoriesList.hide();
+  $(".star").show();
+  $favoriteStoriesList.show();
+
+}
 /** helper function to gather form input */
-function gatherCreateStoryFormData(){
+function gatherCreateStoryFormData() {
   return {
     author: $('#s-author').val(),
     title: $('#s-title').val(),
     url: $('#s-url').val()
-  } 
- }
+  }
+}
 
 /** gather from data, add to the story list and update DOM*/
 
- async function addNewStoryFromForm(evt){
-   evt.preventDefault();
-   let formData = gatherCreateStoryFormData();
-    await storyList.addStory(currentUser, formData);
-    $createStoryForm.hide();
-    putStoriesOnPage();
- }
+async function addNewStoryFromForm(evt) {
+  evt.preventDefault();
+  let formData = gatherCreateStoryFormData();
+  $createStoryForm.trigger("reset");
+  await storyList.addStory(currentUser, formData);
+  $createStoryForm.hide();
+  putStoriesOnPage();
+}
 
- $createStoryForm.on("submit", addNewStoryFromForm);
- 
+$createStoryForm.on("submit", addNewStoryFromForm);
+$navFavorite.on("click",putFavStoriesOnPage);
