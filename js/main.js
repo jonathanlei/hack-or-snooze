@@ -46,8 +46,12 @@ async function start() {
   await getAndShowStoriesOnStart();
 
   // if we got a logged-in user
-  if (currentUser) {updateUIOnUserLogin(), $(".star").show(),
-  $(".star").on("click", currentUser.addOrRemoveFavStory);};
+
+  //we had ',' instead of ';', so seacond part never run
+  if (currentUser) {
+    updateUIOnUserLogin();
+    $(".star").show()
+  }
 }
 
 // Once the DOM is entirely loaded, begin the app

@@ -81,6 +81,7 @@ class StoryList {
     let { title, author, url, username, storyId, createdAt } = storyResponse.data.story;
     let newStory = new Story({ title, author, url, username, storyId, createdAt });
     this.stories.unshift(newStory);
+    console.log(newStory);
     return newStory;
   }
 }
@@ -167,36 +168,44 @@ class User {
     }
   }
   /* adding the story  object to the favorite array */
-  addingFavoriteStory = evt=> {
+  addingFavoriteStory = evt => {
     let storyId=$(evt.target).closest("li").attr("id");
     // get story object from storyList 
-    let favStory= storyList.stories.filter(s=> s.storyId===storyId);
+    let favStory= storyList.stories.filter(s => s.storyId === storyId);
     this.favorites.push(favStory[0]);
   }
+
   /* remove the story object from the favorite array */
-  removeFavoriteStory= evt =>{
-    let storyId=$(evt.target).closest("li").attr("id");
-    let favStoryIdx= storyList.stories.forEach(function(story,index){
-      if (story.storyId===storyId){
-        return index;
+  removeFavoriteStory = evt => {
+    let storyId = $(evt.target).closest("li").attr("id");
+    console.log(storyId);
+    
+    //we were iterating the stories not favorites 
+    //remove was not working because forEach can only return undefined
+
+    currentUser.favorites.forEach((story,index) => {
+      if (story.storyId === storyId){
+        currentUser.favorites.splice(index,1);
       }
-    });
-    this.favorites.splice(favStoryIdx,1);
+    })
   }
 
  /* decide to add or remove a favarite story and change star color*/
-  addOrRemoveFavStory= evt=>{
-    let starIcon= evt.target;
-    if (starIcon.classList.contains("far")){
+  
+  addOrRemoveFavStory = evt => {
+    let starIcon = evt.target;
+    if (starIcon.classList.contains("far")){ //
+      console.log("addOrRemove", 'add');
       this.addingFavoriteStory(evt);
-      starIcon.classList.toggle("far", false)
+      starIcon.classList.remove("far");
       starIcon.classList.add("fas");
-    }
-    else {
+
+    } else {
+
+      console.log("addOrRemove", 'remove');
       this.removeFavoriteStory(evt);
-      starIcon.classList.toggle("fas", false)
+      starIcon.classList.remove("fas");
       starIcon.classList.add("far");
     }
   }
-
 }

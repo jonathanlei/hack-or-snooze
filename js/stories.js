@@ -41,11 +41,12 @@ function generateStoryMarkup(story) {
 function checkIfFavorited(){
   
   let favIdArray = currentUser.favorites.map((story) => story.storyId);
+  console.log(favIdArray);
   let allStories = $allStoriesList.children();
 
   for(let story of allStories){
     if(favIdArray.includes(story.id)){
-      $(`#${story.id} span i`)[0].classList.toggle("far", false);
+      $(`#${story.id} span i`)[0].classList.remove("far");
       $(`#${story.id} span i`)[0].classList.add("fas");
     }
   }
@@ -55,6 +56,8 @@ function checkIfFavorited(){
 
 function putStoriesOnPage() {
   console.debug("putStoriesOnPage");
+  $body.off("click", ".star", currentUser.addOrRemoveFavStory);
+
   $allStoriesList.empty();
 
   // loop through all of our stories and generate HTML for them
@@ -62,21 +65,20 @@ function putStoriesOnPage() {
     const $story = generateStoryMarkup(story);
     $allStoriesList.append($story);
   }
+
   checkIfFavorited();
   
   if (currentUser) {
     $(".star").show();
   };
-  $(".star").on("click", currentUser.addOrRemoveFavStory);
   $allStoriesList.show();
-
-
-  
-  
+  $body.on("click", ".star", currentUser.addOrRemoveFavStory);
 }
 
 /* get a list of stories according to favarite list from Server, generates their HTML, and puts on page.*/
 function putFavStoriesOnPage() {
+  $body.off("click", ".star", currentUser.addOrRemoveFavStory);
+
   console.debug("putFavStoriesOnPage");
 
   $favoriteStoriesList.empty();
@@ -87,23 +89,25 @@ function putFavStoriesOnPage() {
   for (let story of currentUser.favorites) {
     const $story = generateStoryMarkup(story);
     $favoriteStoriesList.append($story);
-
   }
 
   $allStoriesList.hide();
+ 
 
   let favoriteStoriesStars = $("#favorite-stories-list .star i");
 
   for(let favStar of favoriteStoriesStars){
-    favStar.classList.toggle("far", false);
+    favStar.classList.remove("far");
     favStar.classList.add("fas");
-    $(favStar).on("click", currentUser.addOrRemoveFavStory);
+    // $(favStar).on("click", currentUser.addOrRemoveFavStory);
   }
+    
 
   $(".star").show();
   $favoriteStoriesList.show();
-
+  $body.on("click", ".star", currentUser.addOrRemoveFavStory);
 }
+
 /** helper function to gather form input */
 function gatherCreateStoryFormData() {
   return {
