@@ -46,7 +46,8 @@ async function start() {
   await getAndShowStoriesOnStart();
 
   // if we got a logged-in user
-  if (currentUser) {updateUIOnUserLogin(), $(".star").show()};
+  if (currentUser) {updateUIOnUserLogin(), $(".star").show(),
+  $(".star").on("click", currentUser.addOrRemoveFavStory);};
 }
 
 // Once the DOM is entirely loaded, begin the app

@@ -62,15 +62,14 @@ function putStoriesOnPage() {
     const $story = generateStoryMarkup(story);
     $allStoriesList.append($story);
   }
-  debugger;
   checkIfFavorited();
   
   if (currentUser) {
-    $(".star").show()
+    $(".star").show();
   };
-
+  $(".star").on("click", currentUser.addOrRemoveFavStory);
   $allStoriesList.show();
-  $body.on("click", ".star i", currentUser.addOrRemoveFavStory);
+
 
   
   
