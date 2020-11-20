@@ -42,8 +42,7 @@ function checkIfFavorited() {
   let allStories = $allStoriesList.children();
   for (let story of allStories) {
     if (favIdArray.includes(story.id)) {
-      $(`#${story.id} span i`)[0].classList.remove("far");
-      $(`#${story.id} span i`)[0].classList.add("fas");
+      $($(`#${story.id} span i`)[0]).removeClass("far").addClass("fas");
     }
   }
 
@@ -52,7 +51,7 @@ function checkIfFavorited() {
 
 function putStoriesOnPage() {
   console.debug("putStoriesOnPage");
-  if (currentUser) { $body.off("click", ".star", currentUser.addOrRemoveFavStory) };
+  if (currentUser) { $body.off("click", ".star", addOrRemoveFavStory) };
 
   $allStoriesList.empty();
 
@@ -65,7 +64,7 @@ function putStoriesOnPage() {
   if (currentUser) {
     $(".star").show();
     checkIfFavorited();
-    $body.on("click", ".star", currentUser.addOrRemoveFavStory);
+    $body.on("click", ".star", addOrRemoveFavStory);
   };
   $allStoriesList.show();
 
@@ -73,7 +72,7 @@ function putStoriesOnPage() {
 
 /* get a list of stories according to favarite list from Server, generates their HTML, and puts on page.*/
 function putFavStoriesOnPage() {
-  $body.off("click", ".star", currentUser.addOrRemoveFavStory);
+  $body.off("click", ".star", addOrRemoveFavStory);
 
   console.debug("putFavStoriesOnPage");
   hidePageComponents();
@@ -90,13 +89,43 @@ function putFavStoriesOnPage() {
   // add stars to all favorites
   let favoriteStoriesStars = $("#favorite-stories-list .star i");
   for (let favStar of favoriteStoriesStars) {
-    favStar.classList.remove("far");
-    favStar.classList.add("fas");
+    $(favStar).removeClass("far").addClass("fas");
   }
   $(".star").show();
   $favoriteStoriesList.show();
-  $body.on("click", ".star", currentUser.addOrRemoveFavStory);
+  $body.on("click", ".star", addOrRemoveFavStory);
 }
+
+function putOwnStoryOnPage(){
+  hidePageComponents();
+  $myStoriesList.empty();
+  if (currentUser.ownStories.length===0){
+    $myStoriesList.append ("<h4>No stories added by user yet!</h4>");
+  }
+  
+
+
+  $myStoriesList.show();
+}
+
+
+/* change star color, and update User's favorite list */ 
+function addOrRemoveFavStory(evt){
+  let $starIcon = $(evt.target);
+  let storyId = $(evt.target).closest("li").attr("id");
+  let addOrRemove;
+  // changing star color 
+  if ($starIcon.hasClass("far")) { 
+    $starIcon.removeClass("far").addClass("fas")
+    addOrRemove="add";
+  } else {
+    $starIcon.removeClass("fas").addClass("far")
+    addOrRemove="remove";
+  }
+  // update favorite array on current user 
+  currentUser.updateFavorites(storyId,addOrRemove);
+}
+
 
 /** helper function to gather form input */
 function gatherCreateStoryFormData() {
@@ -106,6 +135,7 @@ function gatherCreateStoryFormData() {
     url: $('#s-url').val()
   }
 }
+
 
 /** gather from data, add to the story list and update DOM*/
 
@@ -120,4 +150,4 @@ async function addNewStoryFromForm(evt) {
 
 $createStoryForm.on("submit", addNewStoryFromForm);
 $navFavorite.on("click", putFavStoriesOnPage);
-
+$navOwnStory.on("click", putOwnStoryOnPage);

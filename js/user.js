@@ -109,7 +109,7 @@ function saveUserCredentialsInLocalStorage() {
 
 function updateUIOnUserLogin() {
   console.debug("updateUIOnUserLogin");
-  if (currentUser){$body.off("click", ".star", currentUser.addOrRemoveFavStory)};
+  if (currentUser){$body.off("click", ".star", addOrRemoveFavStory)};
   // hide forms and show nav links
   $loginForm.hide();
   $signupForm.hide();
@@ -117,7 +117,7 @@ function updateUIOnUserLogin() {
   // add stars and show favorited 
   checkIfFavorited();
   $(".star").show();
-  $body.on("click", ".star", currentUser.addOrRemoveFavStory);
+  $body.on("click", ".star",addOrRemoveFavStory);
   // show body
   $allStoriesList.show();
   console.log("updateUIOnUserLogin called")
