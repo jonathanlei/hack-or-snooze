@@ -35,11 +35,26 @@ function generateStoryMarkup(story) {
 
 }
 
+
+/* check if story is in the favorite list, if so mark as favorited */ 
+
+function checkIfFavorited(){
+  
+  let favIdArray = currentUser.favorites.map((story) => story.storyId);
+  let allStories = $allStoriesList.children();
+
+  for(let story of allStories){
+    if(favIdArray.includes(story.id)){
+      $(`#${story.id} span i`)[0].classList.toggle("far", false);
+      $(`#${story.id} span i`)[0].classList.add("fas");
+    }
+  }
+
+}
 /** Gets list of stories from server, generates their HTML, and puts on page. */
 
 function putStoriesOnPage() {
   console.debug("putStoriesOnPage");
-
   $allStoriesList.empty();
 
   // loop through all of our stories and generate HTML for them
@@ -47,24 +62,45 @@ function putStoriesOnPage() {
     const $story = generateStoryMarkup(story);
     $allStoriesList.append($story);
   }
-  if (currentUser) {$(".star").show()};
+  debugger;
+  checkIfFavorited();
+  
+  if (currentUser) {
+    $(".star").show()
+  };
 
   $allStoriesList.show();
+  $body.on("click", ".star i", currentUser.addOrRemoveFavStory);
+
+  
+  
 }
 
 /* get a list of stories according to favarite list from Server, generates their HTML, and puts on page.*/
 function putFavStoriesOnPage() {
   console.debug("putFavStoriesOnPage");
 
-  if (currentUser.favorites.length!==0){
-    $favoriteStoriesList.empty();
+  $favoriteStoriesList.empty();
+  if (currentUser.favorites.length === 0){
+    $favoriteStoriesList.append("<h4>No favorites added!</h4>");
   }
   // loop through all of the favorites and generate HTML for them
   for (let story of currentUser.favorites) {
     const $story = generateStoryMarkup(story);
     $favoriteStoriesList.append($story);
+
   }
+
   $allStoriesList.hide();
+
+  let favoriteStoriesStars = $("#favorite-stories-list .star i");
+
+  for(let favStar of favoriteStoriesStars){
+    favStar.classList.toggle("far", false);
+    favStar.classList.add("fas");
+    $(favStar).on("click", currentUser.addOrRemoveFavStory);
+  }
+
   $(".star").show();
   $favoriteStoriesList.show();
 
@@ -90,4 +126,5 @@ async function addNewStoryFromForm(evt) {
 }
 
 $createStoryForm.on("submit", addNewStoryFromForm);
-$navFavorite.on("click",putFavStoriesOnPage);
+$navFavorite.on("click", putFavStoriesOnPage);
+

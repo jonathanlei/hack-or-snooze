@@ -112,6 +112,6 @@ function updateUIOnUserLogin() {
   $allStoriesList.show();
   // show fav stars 
   $(".star").show();
-  $(".star").on("click",currentUser.addOrRemoveFavStory);
+  $(".star").on("click", currentUser.addOrRemoveFavStory);
   updateNavOnLogin();
 }
