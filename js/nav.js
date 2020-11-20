@@ -32,7 +32,6 @@ function updateNavOnLogin() {
   $navLogOut.show();
   $mainNavLinks.show();
   $navUserProfile.text(`${currentUser.username}`).show();
-  
 }
 
 /** Show create story form on click on "submit"  */

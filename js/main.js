@@ -16,7 +16,7 @@ const $navUserProfile = $("#nav-user-profile");
 const $navLogOut = $("#nav-logout");
 const $navSubmit = $("#nav-submit");
 const $navFavorite= $('#nav-favorites')
-const $mainNavLinks=$("#main-nav-links");
+const $mainNavLinks=$(".main-nav-links");
 
 
 
@@ -44,13 +44,10 @@ async function start() {
   // "Remember logged-in user" and log in, if credentials in localStorage
   await checkForRememberedUser();
   await getAndShowStoriesOnStart();
+  $mainNavLinks.hide();
 
-  // if we got a logged-in user
-
-  //we had ',' instead of ';', so seacond part never run
   if (currentUser) {
     updateUIOnUserLogin();
-    $(".star").show()
   }
 }
 

@@ -6,7 +6,6 @@ let storyList;
 async function getAndShowStoriesOnStart() {
   storyList = await StoryList.getStories();
   $storiesLoadingMsg.remove();
-
   putStoriesOnPage();
 }
 
@@ -36,16 +35,13 @@ function generateStoryMarkup(story) {
 }
 
 
-/* check if story is in the favorite list, if so mark as favorited */ 
+/* check if story is in the favorite list, if so mark as favorited */
 
-function checkIfFavorited(){
-  
+function checkIfFavorited() {
   let favIdArray = currentUser.favorites.map((story) => story.storyId);
-  console.log(favIdArray);
   let allStories = $allStoriesList.children();
-
-  for(let story of allStories){
-    if(favIdArray.includes(story.id)){
+  for (let story of allStories) {
+    if (favIdArray.includes(story.id)) {
       $(`#${story.id} span i`)[0].classList.remove("far");
       $(`#${story.id} span i`)[0].classList.add("fas");
     }
@@ -56,7 +52,7 @@ function checkIfFavorited(){
 
 function putStoriesOnPage() {
   console.debug("putStoriesOnPage");
-  if (currentUser){$body.off("click", ".star", currentUser.addOrRemoveFavStory)};
+  if (currentUser) { $body.off("click", ".star", currentUser.addOrRemoveFavStory) };
 
   $allStoriesList.empty();
 
@@ -66,12 +62,13 @@ function putStoriesOnPage() {
     $allStoriesList.append($story);
   }
 
-  checkIfFavorited();
   if (currentUser) {
     $(".star").show();
+    checkIfFavorited();
+    $body.on("click", ".star", currentUser.addOrRemoveFavStory);
   };
   $allStoriesList.show();
-  $body.on("click", ".star", currentUser.addOrRemoveFavStory);
+
 }
 
 /* get a list of stories according to favarite list from Server, generates their HTML, and puts on page.*/
@@ -81,7 +78,8 @@ function putFavStoriesOnPage() {
   console.debug("putFavStoriesOnPage");
   hidePageComponents();
   $favoriteStoriesList.empty();
-  if (currentUser.favorites.length === 0){
+  // no favorites message
+  if (currentUser.favorites.length === 0) {
     $favoriteStoriesList.append("<h4>No favorites added!</h4>");
   }
   // loop through all of the favorites and generate HTML for them
@@ -89,19 +87,12 @@ function putFavStoriesOnPage() {
     const $story = generateStoryMarkup(story);
     $favoriteStoriesList.append($story);
   }
-
-  
- 
-
+  // add stars to all favorites
   let favoriteStoriesStars = $("#favorite-stories-list .star i");
-
-  for(let favStar of favoriteStoriesStars){
+  for (let favStar of favoriteStoriesStars) {
     favStar.classList.remove("far");
     favStar.classList.add("fas");
-    // $(favStar).on("click", currentUser.addOrRemoveFavStory);
   }
-    
-
   $(".star").show();
   $favoriteStoriesList.show();
   $body.on("click", ".star", currentUser.addOrRemoveFavStory);

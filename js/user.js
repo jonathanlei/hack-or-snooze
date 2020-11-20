@@ -108,14 +108,18 @@ function saveUserCredentialsInLocalStorage() {
  */
 
 function updateUIOnUserLogin() {
-  if (currentUser){$body.off("click", ".star", currentUser.addOrRemoveFavStory)};
   console.debug("updateUIOnUserLogin");
-  $allStoriesList.show();
-  console.log("UI")
-  // show fav stars 
+  if (currentUser){$body.off("click", ".star", currentUser.addOrRemoveFavStory)};
+  // hide forms and show nav links
+  $loginForm.hide();
+  $signupForm.hide();
+  $mainNavLinks.show();
+  // add stars and show favorited 
+  checkIfFavorited();
   $(".star").show();
-
   $body.on("click", ".star", currentUser.addOrRemoveFavStory);
-
+  // show body
+  $allStoriesList.show();
+  console.log("updateUIOnUserLogin called")
   updateNavOnLogin();
 }

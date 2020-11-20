@@ -168,40 +168,33 @@ class User {
     }
   }
   /* adding the story  object to the favorite array */
-  addingFavoriteStory = evt => {
-    let storyId=$(evt.target).closest("li").attr("id");
-    // get story object from storyList 
-    let favStory= storyList.stories.filter(s => s.storyId === storyId);
-    this.favorites.push(favStory[0]);
+  addingFavoriteStory = async evt => {
+    let storyId = $(evt.target).closest("li").attr("id");
+    // make the ajax post request 
+    let response = await axios.post(`${BASE_URL}/users/${currentUser.username}/favorites/${storyId}`, { token: currentUser.loginToken });
+    // update favorites
+    this.favorites =  response.data.user.favorites.map(story => new Story(story));
   }
 
   /* remove the story object from the favorite array */
-  removeFavoriteStory = evt => {
+  removeFavoriteStory = async evt => {
     let storyId = $(evt.target).closest("li").attr("id");
-    console.log(storyId);
-    
-    //we were iterating the stories not favorites 
-    //remove was not working because forEach can only return undefined
-
-    currentUser.favorites.forEach((story,index) => {
-      if (story.storyId === storyId){
-        currentUser.favorites.splice(index,1);
-      }
-    })
+    let response = await axios.delete(`${BASE_URL}/users/${currentUser.username}/favorites/${storyId}`, { data: { token: currentUser.loginToken } });
+    // update favorites
+    this.favorites = response.data.user.favorites.map(story => new Story(story));
   }
 
- /* decide to add or remove a favarite story and change star color*/
-  
+  /* decide to add or remove a favarite story and change star color*/
+
   addOrRemoveFavStory = evt => {
     let starIcon = evt.target;
-    if (starIcon.classList.contains("far")){ //
+    if (starIcon.classList.contains("far")) { //
       console.log("addOrRemove", 'add');
       this.addingFavoriteStory(evt);
       starIcon.classList.remove("far");
       starIcon.classList.add("fas");
 
     } else {
-
       console.log("addOrRemove", 'remove');
       this.removeFavoriteStory(evt);
       starIcon.classList.remove("fas");
