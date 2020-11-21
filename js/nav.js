@@ -42,4 +42,19 @@ function showCreateStoryForm(){
 }
 $navSubmit.on("click", showCreateStoryForm);
 
+/** Show favorite stories on page when clicked on nav */
+function navFavStories(){
+  hidePageComponents();
+  putFavStoriesOnPage();
+}
 
+$navFavorite.on("click", navFavStories);
+
+
+/** show user's own story when clicked on nav */
+function navOwnStories(){
+  hidePageComponents();
+  putOwnStoriesOnPage();
+}
+
+$navOwnStory.on("click", navOwnStories);

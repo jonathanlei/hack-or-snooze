@@ -84,6 +84,12 @@ class StoryList {
     console.log(newStory);
     return newStory;
   }
+
+  //move the axios call up here (from the bottom) 
+  async removeStory(storyId){
+    this.stories = this.stories.filter((story) => story.storyId !== storyId);
+    await axios.delete(`${BASE_URL}/stories/${storyId}`, { data: { token: this.loginToken }});
+  }
 }
 
 
@@ -102,7 +108,7 @@ class User {
     name,
     createdAt,
     favorites = [],
-    ownStories = []
+    stories = []
   },
     token) {
     this.username = username;
@@ -111,7 +117,7 @@ class User {
 
     // instantiate Story instances for the user's favorites and ownStories
     this.favorites = favorites.map(s => new Story(s));
-    this.ownStories = ownStories.map(s => new Story(s));
+    this.ownStories = stories.map(s => new Story(s));
 
     // store the login token on the user so it's easy to find for API calls.
     this.loginToken = token;
@@ -168,9 +174,19 @@ class User {
     }
   }
   
+  /** axios post/delete request and update favorites list */
+  
   async updateFavorites(storyId, addOrRemove) {
     let method= (addOrRemove === "add") ? "POST" : "DELETE" ;
-    let response = await axios(`${BASE_URL}/users/${currentUser.username}/favorites/${storyId}`, { data: { token: currentUser.loginToken }, method});
+    let response = await axios(`${BASE_URL}/users/${this.username}/favorites/${storyId}`, { data: { token: this.loginToken }, method});
     this.favorites = response.data.user.favorites.map(story => new Story(story));
   }
+ 
+  /**update ownstories and favorites lists */
+
+  removeStory(storyId){
+    this.ownStories = this.ownStories.filter((story) => story.storyId !== storyId);
+	  this.favorites = this.favorites.filter((story) => story.storyId !== storyId);
+  }
+  
 }
